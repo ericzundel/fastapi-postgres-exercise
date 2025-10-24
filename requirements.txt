@@ -4,3 +4,5 @@ sqlalchemy>=1.4
 asyncpg
 python-dotenv
 jinja2
+pydantic[email]
+python-multipart

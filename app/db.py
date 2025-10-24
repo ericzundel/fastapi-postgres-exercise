@@ -10,6 +10,8 @@ DATABASE_URL = os.getenv(
     "postgresql+asyncpg://postgres:postgres@localhost:5432/postgres",
 )
 
+#print("DATABASE_URL=", DATABASE_URL)
+
 engine = create_async_engine(DATABASE_URL, echo=False)
 
 # Async session factory
