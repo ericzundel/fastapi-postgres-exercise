@@ -1,19 +1,22 @@
 from fastapi import FastAPI, Request, Form
+from fastapi.concurrency import asynccontextmanager
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 from .db import async_session, init_db
 from .models import Person
 from .schemas import PersonCreate
 
-app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
 
-
-@app.on_event("startup")
-async def startup_event():
-    # create tables if needed
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # startup code
+    print("Running startup tasks...")
     await init_db()
+    yield
+    # shutdown code (if any)
 
+app = FastAPI(lifespan=lifespan)
 
 @app.get("/", response_class=HTMLResponse)
 async def form_get(request: Request):
