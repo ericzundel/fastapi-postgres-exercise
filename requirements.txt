@@ -7,3 +7,5 @@ jinja2
 pydantic[email]
 python-multipart
 greenlet
+pytest
+httpx
