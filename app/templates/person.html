@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Person</title>
+    <style>
+      body { font-family: Arial, sans-serif; padding: 2rem; }
+      .card { max-width: 720px; border: 1px solid #ddd; padding: 1rem; border-radius: 6px; }
+      .field { margin: 0.5rem 0; }
+      .label { font-weight: 600; color: #333; }
+      a.back { display:inline-block; margin-top:1rem; }
+    </style>
+  </head>
+  <body>
+    <h1>Person</h1>
+
+    {% if person %}
+    <div class="card">
+      <div class="field"><span class="label">ID:</span> {{ person.id }}</div>
+      <div class="field"><span class="label">First name:</span> {{ person.first_name }}</div>
+      <div class="field"><span class="label">Last name:</span> {{ person.last_name }}</div>
+      <div class="field"><span class="label">Email:</span> {{ person.email }}</div>
+    </div>
+    {% else %}
+    <p>No person provided.</p>
+    {% endif %}
+
+    <a class="back" href="/">← Back</a>
+  </body>
+</html>
