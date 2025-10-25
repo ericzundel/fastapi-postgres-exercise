@@ -55,6 +55,11 @@ jobs:
     - name: Make sure postgres user is configured to create tables
       run: |
         # scripts/init_db.sh
-    - name: Test with pytest
+    - name: Run unit tests with pytest
       run: |
-        pytest
+        pytest tests/
+    - name: Run integration tests with pytest
+      run: |
+        scripts/faexample_service.sh start
+        pytest integration-tests/
+        scripts/faexample_service.sh stop
