@@ -9,7 +9,7 @@ import app.main as main
 from app.db import async_session
 from app.models import Person
 
-@pytest.mark.skip(reason="This test is can example of an integration test and will fail if postgres isn't running.")
+# @pytest.mark.skip(reason="This test is can example of an integration test and will fail if postgres isn't running.")
 @pytest.mark.asyncio
 async def test_create_and_get_person():
     """Integration test: POST form to create a Person, then fetch by ID.
