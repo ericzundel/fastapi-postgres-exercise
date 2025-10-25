@@ -7,5 +7,8 @@ jinja2
 pydantic[email]
 python-multipart
 greenlet
+
+# For testing
 pytest
+pytest-asyncio
 httpx
