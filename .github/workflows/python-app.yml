@@ -1,21 +1,39 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
-name: Python application
+name: FastAPI Postgres Exercise CI
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+env:
+  DATABASE_URL: postgresql+asyncpg://test_user:mysecretpassword@localhost:5432/test_db
 
 permissions:
   contents: read
 
 jobs:
+
   build:
 
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14 # You can specify a different version here
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: mysecretpassword
+        ports:
+          - 5432:5432 # Map port 5432 of the service container to the host
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
     - uses: actions/checkout@v4
@@ -34,6 +52,9 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Make sure postgres user is configured to create tables
+      run: |
+        # scripts/init_db.sh
     - name: Test with pytest
       run: |
         pytest
