@@ -14,8 +14,9 @@ from app.models import Person
 async def setup_database():
     """Ensure the database is initialized before tests run."""
     await main.init_db()
+    yield
 
-# @pytest.mark.skip(reason="This test is can example of an integration test and will fail if postgres isn't running.")
+@pytest.mark.skip(reason="This test is can example of an integration test and will fail if postgres isn't running.")
 @pytest.mark.asyncio
 async def test_create_and_get_person():
     """Integration test: POST form to create a Person, then fetch by ID.
