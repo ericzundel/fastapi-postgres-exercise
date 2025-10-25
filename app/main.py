@@ -43,3 +43,7 @@ async def read_person(request: Request, person_id: int):
         if db_person is None:
             return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
         return templates.TemplateResponse("person.html", {"request": request, "person": db_person})
+    
+@app.get("/health")
+async def health_check():
+    return {"status": "ok"}
