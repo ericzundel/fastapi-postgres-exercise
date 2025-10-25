@@ -31,11 +31,21 @@ echo
 ########################
 set +e # Ignore errors for the next commands
 
+# cmdline access to initialize DBs
+#  This worked for local mac postgres  install with no password
+#  psql -h localhost postgres 
+#  For Docker install, try
+#  psql -h localhost -U postgres postgres  (it then prompts for password)
+
 CMD="create user ${db_username} with password '${db_password}'"
 psql -h ${db_host} postgres -c "$CMD"
+
+# Gives all persmissions over the DB. Fine for development, not good for prod
 CMD="create database  ${db_name} owner ${db_username}"
 psql -h ${db_host} postgres -c "$CMD"
 
+
+# 
 set -e # Resume exit on error
 ########################
 
