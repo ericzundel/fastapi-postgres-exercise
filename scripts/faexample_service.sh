@@ -2,6 +2,9 @@
 # This script starts the FastAPI application using Uvicorn and writes out it's pid to a 
 # file for later management.
 
+EXTRA_ARGS=""
+#EXTRA_ARGS="--debug"
+
 set -euo pipefail  # Exit on error, undefined vars, and pipeline failures
 
 if [ $# -eq 0 ]; then
@@ -40,7 +43,7 @@ start() {
     fi
 
     echo "Starting Uvicorn..."
-    nohup uvicorn "$APP" --host "$HOST" --port "$PORT" >> "$LOGFILE" 2>&1 &
+    nohup uvicorn "$APP" --host "$HOST" --port "$PORT" ${EXTRA_ARGS} >> "$LOGFILE" 2>&1 &
     echo $! > "$PIDFILE"
     echo "Uvicorn started with PID $(cat $PIDFILE)"
 }

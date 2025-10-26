@@ -21,7 +21,7 @@
     </div>
     {% endif %}
 
-    <form method="post" action="/persons/new">
+    <div id="createSection">
       <label for="first_name">First name</label>
       <input id="first_name" name="first_name" type="text" required>
 
@@ -32,9 +32,11 @@
       <input id="email" name="email" type="email" required>
 
       <div style="margin-top:1rem">
-        <button type="submit">Save</button>
+        <button id="saveBtn">Save (send JSON)</button>
       </div>
-    </form>
+
+      <div id="createResult" style="margin-top:1rem"></div>
+    </div>
 
     <hr style="margin:2rem 0">
 
@@ -54,8 +56,49 @@
         e.preventDefault();
         const id = document.getElementById('person_id').value;
         if (!id) return;
-        // Use the singular /persons/{id} path (consistent with /person/new in this project)
         window.location.href = '/persons/' + encodeURIComponent(id);
+      });
+
+      // Send JSON to the /persons/new endpoint and show result
+      document.getElementById('saveBtn').addEventListener('click', async function(e) {
+        e.preventDefault();
+        const first_name = document.getElementById('first_name').value;
+        const last_name = document.getElementById('last_name').value;
+        const email = document.getElementById('email').value;
+
+        // basic client-side validation
+        if (!first_name || !last_name || !email) {
+          const r = document.getElementById('createResult');
+          r.innerHTML = '<div style="color:#b33">Please fill out all fields.</div>';
+          return;
+        }
+
+        try {
+          const resp = await fetch('/persons/new', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ first_name, last_name, email })
+          });
+
+          const r = document.getElementById('createResult');
+          if (!resp.ok) {
+            let text = await resp.text();
+            try { text = JSON.parse(text); } catch(_) {}
+            r.innerHTML = '<div style="color:#b33">Error saving person: ' + (resp.status + ' ' + JSON.stringify(text)) + '</div>';
+            return;
+          }
+
+          const person = await resp.json();
+          r.innerHTML = '<div class="success">Person saved! ID: ' + person.id + ' — ' + person.first_name + ' ' + person.last_name + ' (' + person.email + ')</div>';
+
+          // Optionally clear fields
+          document.getElementById('first_name').value = '';
+          document.getElementById('last_name').value = '';
+          document.getElementById('email').value = '';
+        } catch (err) {
+          const r = document.getElementById('createResult');
+          r.innerHTML = '<div style="color:#b33">Network error: ' + err + '</div>';
+        }
       });
     </script>
 
